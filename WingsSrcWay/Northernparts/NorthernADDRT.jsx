@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, Image, TouchableOpacity, TextInput, ScrollView, Animated, Easing } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Calendar } from 'react-native-calendars';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { backarr, calendar, createPlaceBtn, movement, savePlaceBtn, wherearr } from '../Northernconst/wingsassts';
 import { common, route } from '../Northernconst/wingsstyles';
 
@@ -17,7 +17,8 @@ const NorthernADDRT = () => {
     const [startMove, setStartMove] = useState('');
     const [whereGoing, setWhereGoing] = useState('');
 
-    // Animation references
+    const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideUpAnim = useRef(new Animated.Value(30)).current;
     const backBtnRotate = useRef(new Animated.Value(0)).current;
@@ -28,9 +29,7 @@ const NorthernADDRT = () => {
         where: new Animated.Value(0)
     }).current;
 
-    // Initialize animations
     React.useEffect(() => {
-        // Back button animation
         Animated.spring(backBtnRotate, {
             toValue: 1,
             friction: 3,
@@ -38,7 +37,6 @@ const NorthernADDRT = () => {
             useNativeDriver: true
         }).start();
 
-        // Main content animation
         Animated.parallel([
             Animated.timing(fadeAnim, {
                 toValue: 1,
@@ -53,7 +51,6 @@ const NorthernADDRT = () => {
             })
         ]).start();
 
-        // Staggered input animations
         Animated.stagger(150, [
             Animated.timing(inputAnimations.date, {
                 toValue: 1,
@@ -104,6 +101,14 @@ const NorthernADDRT = () => {
         return `${date}, ${formattedHours}.${formattedMinutes} ${ampm}`;
     };
 
+    const showTimePicker = () => setTimePickerVisibility(true);
+    const hideTimePicker = () => setTimePickerVisibility(false);
+
+    const handleConfirmTime = (date) => {
+        setStartTime(date);
+        hideTimePicker();
+    };
+
     const formatDate = () => {
         const date = startDate.toLocaleDateString('en-GB', {
             day: 'numeric',
@@ -132,7 +137,6 @@ const NorthernADDRT = () => {
             const updatedRoutes = [...existingRoutes, newRoute];
             await AsyncStorage.setItem(ROUTES_KEY, JSON.stringify(updatedRoutes));
             
-            // Animate out before navigating back
             Animated.parallel([
                 Animated.timing(fadeAnim, {
                     toValue: 0,
@@ -164,7 +168,6 @@ const NorthernADDRT = () => {
             })
         ]).start(() => {
             setShowCalendar(!showCalendar);
-            // Reset animations for the next view
             fadeAnim.setValue(0);
             slideUpAnim.setValue(30);
             Animated.timing(fadeAnim, {
@@ -242,16 +245,24 @@ const NorthernADDRT = () => {
                                 }}
                             />
 
-                            <DateTimePicker
-                                value={startTime}
+                            <TouchableOpacity
+                                onPress={showTimePicker}
+                                style={[route.dateButton, {paddingLeft: 17, marginBottom: 40, width: '90%', marginTop: 20, alignSelf: 'center'}]}
+                            >
+                                <Text style={route.dateText}>Select Time: {startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+                            </TouchableOpacity>
+
+                            <DateTimePickerModal
+                                isVisible={isTimePickerVisible}
                                 mode="time"
+                                date={startTime}
+                                onConfirm={handleConfirmTime}
+                                onCancel={hideTimePicker}
+                                is24Hour={false}
+                                themeVariant="dark"
                                 display="spinner"
-                                themeVariant="dark" 
-                                onChange={(event, selectedTime) => {
-                                    if (selectedTime) setStartTime(selectedTime);
-                                }}
-                                style={{ width: '80%', alignSelf: 'center', marginBottom: 20 }}
                             />
+
                         </Animated.View>
 
                         <Animated.View style={{

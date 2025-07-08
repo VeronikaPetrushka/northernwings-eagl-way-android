@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, Image, TouchableOpacity, ScrollView, Animated, Share, Easing } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MapboxGL from '@rnmapbox/maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { backarr, openMapBtn, pinLocation, saveBtn, savedBtn, shareSmall } from '../Northernconst/wingsassts';
 import { card, common } from '../Northernconst/wingsstyles';
 
@@ -133,6 +133,23 @@ const NorthernRP = ({ place }) => {
         outputRange: ['0deg', '180deg']
     });
 
+    const mapDarkStyle = [
+        { elementType: 'geometry', stylers: [{ color: '#212121' }] },
+        { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#212121' }] },
+        { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#757575' }] },
+        { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
+        { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#181818' }] },
+        { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
+        { featureType: 'poi.park', elementType: 'labels.text.stroke', stylers: [{ color: '#1b1b1b' }] },
+        { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#2c2c2c' }] },
+        { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#8a8a8a' }] },
+        { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#2f3948' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#000000' }] },
+        { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#3d3d3d' }] }
+    ];
+
     return (
         <View style={common.container}>
 
@@ -181,32 +198,22 @@ const NorthernRP = ({ place }) => {
                         { scale: scaleAnim }
                     ]
                 }}>
-                    <MapboxGL.MapView
+                    <MapView
+                        provider={PROVIDER_GOOGLE}
                         style={{ flex: 1 }}
-                        styleURL={MapboxGL.StyleURL.Dark}
+                        region={{
+                            latitude: place.coordinates[0],
+                            longitude: place.coordinates[1],
+                            latitudeDelta: 0.02,
+                            longitudeDelta: 0.02,
+                        }}
+                        customMapStyle={mapDarkStyle}
                     >
-                        <MapboxGL.Camera
-                            zoomLevel={12}
-                            centerCoordinate={place.coordinates}
-                        />
-                        {place.coordinates && (
-                            <MapboxGL.PointAnnotation
-                                key={`marker-0`}
-                                id={`marker-0`}
-                                coordinate={place.coordinates}
-                            >
-                                <Animated.View style={{
-                                    borderWidth: 2,
-                                    borderColor: '#fff',
-                                    backgroundColor: '#272727',
-                                    width: 25,
-                                    height: 25,
-                                    borderRadius: 100,
-                                    transform: [{ scale: fadeAnim }]
-                                }} />
-                            </MapboxGL.PointAnnotation>
-                        )}
-                    </MapboxGL.MapView>
+                        <Marker coordinate={{
+                            latitude: place.coordinates[0],
+                            longitude: place.coordinates[1]
+                        }} />
+                    </MapView>
                 </Animated.View>
             ) : (
                 <Animated.ScrollView style={{
