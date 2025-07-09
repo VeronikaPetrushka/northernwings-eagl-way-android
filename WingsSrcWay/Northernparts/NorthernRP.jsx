@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Animated, Share, Easin
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { backarr, openMapBtn, pinLocation, saveBtn, savedBtn, shareSmall } from '../Northernconst/wingsassts';
-import { card, common } from '../Northernconst/wingsstyles';
+import { card, common, darkMapStyle } from '../Northernconst/wingsstyles';
 
 const NorthernRP = ({ place }) => {
     const navigation = useNavigation();
@@ -133,23 +133,6 @@ const NorthernRP = ({ place }) => {
         outputRange: ['0deg', '180deg']
     });
 
-    const mapDarkStyle = [
-        { elementType: 'geometry', stylers: [{ color: '#212121' }] },
-        { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-        { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-        { elementType: 'labels.text.stroke', stylers: [{ color: '#212121' }] },
-        { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#757575' }] },
-        { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-        { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#181818' }] },
-        { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
-        { featureType: 'poi.park', elementType: 'labels.text.stroke', stylers: [{ color: '#1b1b1b' }] },
-        { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#2c2c2c' }] },
-        { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#8a8a8a' }] },
-        { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#2f3948' }] },
-        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#000000' }] },
-        { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#3d3d3d' }] }
-    ];
-
     return (
         <View style={common.container}>
 
@@ -202,16 +185,16 @@ const NorthernRP = ({ place }) => {
                         provider={PROVIDER_GOOGLE}
                         style={{ flex: 1 }}
                         region={{
-                            latitude: place.coordinates[0],
-                            longitude: place.coordinates[1],
-                            latitudeDelta: 0.02,
-                            longitudeDelta: 0.02,
+                            latitude: place.coordinates[1],
+                            longitude: place.coordinates[0],
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421 
                         }}
-                        customMapStyle={mapDarkStyle}
+                        customMapStyle={darkMapStyle}
                     >
                         <Marker coordinate={{
-                            latitude: place.coordinates[0],
-                            longitude: place.coordinates[1]
+                            latitude: place.coordinates[1],
+                            longitude: place.coordinates[0]
                         }} />
                     </MapView>
                 </Animated.View>

@@ -4,54 +4,9 @@ import MapView, { Marker } from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import wingsplaces from '../Northernconst/wingsplaces';
 import { saveBtn, savedBtn, shareSmall, pinLocation, readBtn, backarr } from '../Northernconst/wingsassts';
-import { card, common } from '../Northernconst/wingsstyles';
+import { card, common, darkMapStyle } from '../Northernconst/wingsstyles';
 
 const STORAGE_KEY = 'saved_places';
-
-const darkMapStyle = [
-    {
-        elementType: 'geometry',
-        stylers: [{ color: '#1d2c4d' }]
-    },
-    {
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#8ec3b9' }]
-    },
-    {
-        elementType: 'labels.text.stroke',
-        stylers: [{ color: '#1a3646' }]
-    },
-    {
-        featureType: 'administrative.country',
-        elementType: 'geometry.stroke',
-        stylers: [{ color: '#4b6878' }]
-    },
-    {
-        featureType: 'landscape',
-        elementType: 'geometry',
-        stylers: [{ color: '#2d2d2d' }]
-    },
-    {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{ color: '#3c3c3c' }]
-    },
-    {
-        featureType: 'road',
-        elementType: 'geometry',
-        stylers: [{ color: '#383838' }]
-    },
-    {
-        featureType: 'road.highway',
-        elementType: 'geometry',
-        stylers: [{ color: '#746855' }]
-    },
-    {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{ color: '#17263c' }]
-    }
-];
 
 const MapSight = ({ place, setReadplace }) => {
     return (
@@ -179,43 +134,35 @@ const NorthernMP = () => {
                     </ScrollView>
                 </View>
             ) : (
-                    <MapView
-                        style={{ flex: 1 }}
-                        initialRegion={{
+                    <>
+                        <MapView
+                            style={{ flex: 1 }}
+                            initialRegion={{
                             latitude: 49.0,
-                            longitude: -95.0,
-                            latitudeDelta: 60,
-                            longitudeDelta: 60
-                        }}
-                        customMapStyle={darkMapStyle}
-                        provider="google"
-                        >
-                        {wingsplaces.map((place, index) => (
-                            <Marker
-                            key={`marker-${index}`}
-                            coordinate={{
-                                latitude: place.coordinates[0],
-                                longitude: place.coordinates[1]
+                            longitude: -83.0,
+                            latitudeDelta: 30,
+                            longitudeDelta: 30,
                             }}
-                            onPress={() =>
-                                selectedMapSight === place ? setSelectedMapSight(null) : setSelectedMapSight(place)
-                            }
-                            >
-                            <View style={{
-                                borderWidth: 2,
-                                borderColor: '#fff',
-                                backgroundColor: '#272727',
-                                width: 25,
-                                height: 25,
-                                borderRadius: 100
-                            }} />
-                            </Marker>
-                        ))}
+                            customMapStyle={darkMapStyle}
+                            provider="google"
+                        >
+                            {wingsplaces.map((place, index) => (
+                            <Marker
+                                key={index}
+                                coordinate={{
+                                latitude: place.coordinates[1],
+                                longitude: place.coordinates[0],
+                                }}
+                                onPress={() => setSelectedMapSight(place)}
+                            />
+                            ))}
+                        </MapView>
+
                         {selectedMapSight && (
                             <MapSight place={selectedMapSight} setReadplace={setReadplace} />
                         )}
-                        </MapView>
-                    )}
+                </>
+            )}
         </View>
     );
 };

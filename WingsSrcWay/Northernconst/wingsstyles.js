@@ -357,3 +357,49 @@ export const route = StyleSheet.create({
     },
 
 });
+
+
+export const darkMapStyle = [
+    {
+        elementType: 'geometry',
+        stylers: [{ color: '#1d2c4d' }]
+    },
+    {
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#8ec3b9' }]
+    },
+    {
+        elementType: 'labels.text.stroke',
+        stylers: [{ color: '#1a3646' }]
+    },
+    {
+        featureType: 'administrative.country',
+        elementType: 'geometry.stroke',
+        stylers: [{ color: '#4b6878' }]
+    },
+    {
+        featureType: 'landscape',
+        elementType: 'geometry',
+        stylers: [{ color: '#2d2d2d' }]
+    },
+    {
+        featureType: 'poi',
+        elementType: 'geometry',
+        stylers: [{ color: '#3c3c3c' }]
+    },
+    {
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [{ color: '#383838' }]
+    },
+    {
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [{ color: '#746855' }]
+    },
+    {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [{ color: '#17263c' }]
+    }
+];
